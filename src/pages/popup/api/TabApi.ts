@@ -33,9 +33,15 @@ class ChromeTabApi implements BaseTabApi {
       ),
     )
   }
-  all(): Promise<TabModel[]> {
+
+  private queryWindow() {
+    return new Promise<chrome.windows.Window[]>((resolve) => {
+      chrome.windows.getAll(resolve)
+    })
+  }
+  private queryTabByWindowId(windowId: number) {
     return new Promise((resolve) =>
-      chrome.tabs.query({}, (tabs) => {
+      chrome.tabs.query({ windowId }, (tabs) => {
         resolve(
           tabs
             .filter((tab) => tab.title)
@@ -51,6 +57,15 @@ class ChromeTabApi implements BaseTabApi {
         )
       }),
     )
+  }
+  async all(): Promise<TabModel[]> {
+    return (
+      await Promise.all(
+        (await this.queryWindow()).map((window) =>
+          this.queryTabByWindowId(window.id),
+        ),
+      )
+    ).flat()
   }
   onChange(listener: EmptyFunc) {
     chrome.tabs.onCreated.addListener(listener)
