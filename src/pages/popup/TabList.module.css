@@ -1,6 +1,11 @@
 .root {
   width: 600px;
 }
+.root,
+.root * {
+  background-color: #263238;
+  color: #ffffff;
+}
 /* 顶部搜索内容标题 */
 .header {
   margin: 0;

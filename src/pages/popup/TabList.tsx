@@ -1,6 +1,6 @@
 import * as React from 'react'
 import TabItem from './component/TabItem'
-import { useEffect, useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { TabModel } from './model/TabModel'
 import { useKey } from '../../common/hooks/useKey'
 import { isCharOrNumber } from '../../common/util/isCharOrNumber'
@@ -23,19 +23,15 @@ const TabList: React.FC<PropsType> = (props) => {
       ),
     [keyword, selectIndex, props.list],
   )
+  const keywordInputRef = useRef<HTMLInputElement>(null)
+  const [isFocus, setIsFocus] = useState(true)
   useKey(
-    (key, e) => {
+    async (key, e) => {
       // 输入字符
       // 注：如果同时按住 `ctrl/alt` 也不行
       if (!e.ctrlKey && !e.altKey && isCharOrNumber(key)) {
-        setKeyword(keyword + key)
-        setSelectIndex(0)
-      }
-      // 删除字符
-      if (key === 'Backspace') {
-        if (keyword.length > 0) {
-          setKeyword(keyword.substring(0, keyword.length - 1))
-          setSelectIndex(0)
+        if (!isFocus) {
+          keywordInputRef.current!.focus()
         }
       }
       if (key === 'Enter') {
@@ -43,7 +39,7 @@ const TabList: React.FC<PropsType> = (props) => {
         if (!current) {
           return
         }
-        tabApi.active(current.id)
+        await tabApi.active(current.id)
       }
       // 上移
       if (key === 'ArrowUp') {
@@ -56,18 +52,36 @@ const TabList: React.FC<PropsType> = (props) => {
       }
       console.log(key)
     },
-    { deps: [keyword, selectIndex, filterList] },
+    { deps: [keyword, selectIndex, filterList, isFocus] },
   )
 
   return (
     <div className={css.root}>
       <header>
-        <h2 className={css.header}>{keyword}</h2>
+        <input
+          ref={keywordInputRef}
+          type="text"
+          value={keyword}
+          onChange={(e) => {
+            setSelectIndex(0)
+            setKeyword(e.target.value)
+          }}
+          autoFocus={true}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => {
+            console.log('失去焦点')
+            setIsFocus(false)
+          }}
+        />
       </header>
       <ul className={css.list}>
         {filterList.map((tab, i) => (
           <li key={i}>
-            <TabItem item={tab} selected={selectIndex === i} />
+            <TabItem
+              item={tab}
+              selected={selectIndex === i}
+              onMouseOver={() => setSelectIndex(i)}
+            />
           </li>
         ))}
       </ul>

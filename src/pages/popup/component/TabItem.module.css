@@ -1,12 +1,32 @@
 .root {
+  display: flex;
   padding: 8px;
 }
-.root.active {
-  background-color: red;
+/*当前选择项*/
+.root.active,
+.root.active * {
+  background-color: #607d8b;
+  cursor: pointer;
 }
-.header {
+
+.icon {
+  display: inline-block;
+  border-radius: 50%;
+  margin-right: 16px;
+}
+.content {
+  max-width: calc(100% - 56px - 16px);
+}
+.ellipsis {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.title {
   margin: 0;
 }
 .url {
-  margin: 0;
+  margin: 4px 0 0;
 }

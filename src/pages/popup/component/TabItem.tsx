@@ -3,10 +3,12 @@ import { TabModel } from '../model/TabModel'
 import { tabApi } from '../api/TabApi'
 import css from './TabItem.module.css'
 import classNames from 'classnames'
+import { MouseEventHandler } from 'react'
 
 type PropsType = {
   item: TabModel
   selected: boolean
+  onMouseOver: MouseEventHandler<HTMLDivElement>
 }
 
 const TabItem: React.FC<PropsType> = (props) => {
@@ -16,9 +18,17 @@ const TabItem: React.FC<PropsType> = (props) => {
         [css.active]: props.selected,
       })}
       onClick={() => tabApi.active(props.item.id)}
+      onMouseOver={props.onMouseOver}
     >
-      <h4 className={css.header}>{props.item.title}</h4>
-      <p className={css.url}>{props.item.url}</p>
+      <section>
+        <img className={css.icon} src={props.item.icon} alt="icon" />
+      </section>
+      <section className={css.content}>
+        <h4 className={classNames(css.ellipsis, css.title)}>
+          {props.item.title}
+        </h4>
+        <p className={classNames(css.ellipsis, css.url)}>{props.item.url}</p>
+      </section>
     </div>
   )
 }
