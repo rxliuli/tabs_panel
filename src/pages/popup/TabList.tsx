@@ -1,11 +1,12 @@
 import * as React from 'react'
+import { useMemo, useRef, useState } from 'react'
 import TabItem from './component/TabItem'
-import { useState, useMemo, useRef } from 'react'
 import { TabModel } from './model/TabModel'
 import { useKey } from '../../common/hooks/useKey'
 import { isCharOrNumber } from '../../common/util/isCharOrNumber'
 import { tabApi } from './api/TabApi'
 import css from './TabList.module.css'
+import { windowApi } from './api/WindowApi'
 
 type PropsType = {
   list: TabModel[]
@@ -39,7 +40,10 @@ const TabList: React.FC<PropsType> = (props) => {
         if (!current) {
           return
         }
-        await tabApi.active(current.id)
+        await tabApi.activeByWindow({
+          tabId: current.id,
+          windowId: current.windowId,
+        })
       }
       // 上移
       if (key === 'ArrowUp') {

@@ -1,6 +1,7 @@
 export interface TabModel {
   id: number
-  icon: string
+  windowId: number
+  favIconUrl: string
   title: string
   url: string
 }

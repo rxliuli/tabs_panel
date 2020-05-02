@@ -1,6 +1,8 @@
 import { TabModel } from '../model/TabModel'
 import { EmptyFunc } from '../../../common/types/EmptyFunc'
 import { Random } from 'mockjs'
+import TabActiveInfo = chrome.tabs.TabActiveInfo
+import { windowApi } from './WindowApi'
 
 export interface BaseTabApi {
   /**
@@ -8,7 +10,7 @@ export interface BaseTabApi {
    * @param id
    */
   active(id: number): Promise<TabModel>
-
+  activeByWindow(info: TabActiveInfo): Promise<void>
   /**
    * 获取所有的标签页
    */
@@ -34,6 +36,11 @@ class ChromeTabApi implements BaseTabApi {
     )
   }
 
+  async activeByWindow(info: chrome.tabs.TabActiveInfo): Promise<void> {
+    await windowApi.active(info.windowId)
+    await this.active(info.tabId)
+  }
+
   private queryWindow() {
     return new Promise<chrome.windows.Window[]>((resolve) => {
       chrome.windows.getAll(resolve)
@@ -44,16 +51,9 @@ class ChromeTabApi implements BaseTabApi {
       chrome.tabs.query({ windowId }, (tabs) => {
         resolve(
           tabs
+            //过滤掉没有标题的和插件本身
             .filter((tab) => tab.title)
-            .map(
-              (tab) =>
-                ({
-                  id: tab.id,
-                  title: tab.title,
-                  icon: tab.favIconUrl,
-                  url: tab.url,
-                } as TabModel),
-            ),
+            .map((tab) => tab as TabModel),
         )
       }),
     )
@@ -81,27 +81,19 @@ class ChromeTabApi implements BaseTabApi {
   }
 }
 
-class FireFoxTabApi implements BaseTabApi {
-  active(id: number): Promise<TabModel> {
-    throw new Error('Method not implemented.')
-  }
-  all(): Promise<TabModel[]> {
-    throw new Error('Method not implemented.')
-  }
-
-  onChange(listener: EmptyFunc): EmptyFunc {
-    throw new Error('Method not implemented.')
-  }
-}
-
 class WebTabApi implements BaseTabApi {
-  private static mockTabModel() {
+  private static mockTabModel(): TabModel {
     return {
-      id: Random.increment(0),
+      id: Random.increment(),
+      windowId: Random.increment(),
       title: Random.ctitle(10, 100),
       url: Random.url(),
-      icon: Random.image('40px'),
+      favIconUrl: Random.image('40px'),
     }
+  }
+
+  async activeByWindow(info: chrome.tabs.TabActiveInfo): Promise<void> {
+    console.log('激活窗口和 tabId 了')
   }
 
   async active(id: number): Promise<TabModel> {

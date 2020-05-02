@@ -1,9 +1,9 @@
 import * as React from 'react'
+import { MouseEventHandler } from 'react'
 import { TabModel } from '../model/TabModel'
 import { tabApi } from '../api/TabApi'
 import css from './TabItem.module.css'
 import classNames from 'classnames'
-import { MouseEventHandler } from 'react'
 
 type PropsType = {
   item: TabModel
@@ -12,22 +12,26 @@ type PropsType = {
 }
 
 const TabItem: React.FC<PropsType> = (props) => {
+  const { id, title, url, favIconUrl, windowId } = props.item
   return (
     <div
       className={classNames(css.root, {
         [css.active]: props.selected,
       })}
-      onClick={() => tabApi.active(props.item.id)}
+      onClick={() =>
+        tabApi.activeByWindow({
+          tabId: id,
+          windowId,
+        })
+      }
       onMouseOver={props.onMouseOver}
     >
       <section>
-        <img className={css.icon} src={props.item.icon} alt="icon" />
+        <img className={css.icon} src={favIconUrl} alt="icon" />
       </section>
       <section className={css.content}>
-        <h4 className={classNames(css.ellipsis, css.title)}>
-          {props.item.title}
-        </h4>
-        <p className={classNames(css.ellipsis, css.url)}>{props.item.url}</p>
+        <h4 className={classNames(css.ellipsis, css.title)}>{title}</h4>
+        <p className={classNames(css.ellipsis, css.url)}>{url}</p>
       </section>
     </div>
   )
