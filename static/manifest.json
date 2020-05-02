@@ -1,0 +1,24 @@
+{
+  "name": "tabs_panel",
+  "version": "1.0",
+  "description": "一个标签页快速查找器",
+  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "options_page": "options.html",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+    // "page": "popup.html"
+  },
+  "_execute_browser_action": {
+    "suggested_key": {
+      "windows": "Ctrl+Shift+E",
+      "mac": "Command+Shift+E",
+      "chromeos": "Ctrl+Shift+E",
+      "linux": "Ctrl+Shift+E"
+    }
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "manifest_version": 2
+}

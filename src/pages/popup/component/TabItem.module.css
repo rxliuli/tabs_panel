@@ -1,0 +1,12 @@
+.root {
+  padding: 8px;
+}
+.root.active {
+  background-color: red;
+}
+.header {
+  margin: 0;
+}
+.url {
+  margin: 0;
+}
