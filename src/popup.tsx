@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import TabList from './pages/popup/TabList'
+import TabPanel from './pages/popup/TabPanel'
 import { useEffect, useState } from 'react'
 import { TabModel } from './pages/popup/model/TabModel'
 import { tabApi } from './pages/popup/api/TabApi'
@@ -26,7 +26,7 @@ const Popup: React.FC = () => {
     setTabs(list)
   })
 
-  return <TabList list={tabs} />
+  return <TabPanel list={tabs} />
 }
 
 ReactDOM.render(<Popup />, document.getElementById('app'))

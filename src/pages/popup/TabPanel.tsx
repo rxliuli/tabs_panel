@@ -5,13 +5,13 @@ import { TabModel } from './model/TabModel'
 import { useKey } from '../../common/hooks/useKey'
 import { isCharOrNumber } from '../../common/util/isCharOrNumber'
 import { tabApi } from './api/TabApi'
-import css from './TabList.module.css'
+import css from './TabPanel.module.css'
 
 type PropsType = {
   list: TabModel[]
 }
 
-const TabList: React.FC<PropsType> = (props) => {
+const TabPanel: React.FC<PropsType> = (props) => {
   const [keyword, setKeyword] = useState('')
   const [selectIndex, setSelectIndex] = useState(0)
   const filterList = useMemo(
@@ -61,9 +61,11 @@ const TabList: React.FC<PropsType> = (props) => {
 
   return (
     <div className={css.root}>
-      <header>
+      <header className={css.header}>
         <input
+          className={css.input}
           ref={keywordInputRef}
+          placeholder="请输入关键字搜索 Tab 标签"
           type="text"
           value={keyword}
           onChange={(e) => {
@@ -91,4 +93,4 @@ const TabList: React.FC<PropsType> = (props) => {
   )
 }
 
-export default TabList
+export default TabPanel

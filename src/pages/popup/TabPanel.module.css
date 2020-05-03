@@ -1,0 +1,38 @@
+.root {
+  width: 600px;
+  height: 600px;
+  background-color: #263238;
+  color: #dddddd;
+  overflow-y: auto;
+  position: relative;
+}
+/* 顶部搜索内容标题 */
+.header {
+  margin: 0;
+  position: fixed;
+  width: 100%;
+  box-sizing: border-box;
+  top: 0;
+}
+/*固定顶部输入框*/
+.input {
+  outline: none;
+  border: none;
+  padding: 0 16px;
+  width: 100%;
+  height: 64px;
+  background-color: #263238;
+  border-bottom: solid 4px transparent;
+  color: #dddddd;
+  font-size: 20px;
+  transition: border-bottom-color 0.3s;
+}
+.input:focus {
+  border-bottom-color: #bb86fc;
+}
+/* 清除 ul 列表默认样式 */
+.list {
+  list-style: none;
+  padding-left: 0;
+  margin: 64px 0 0;
+}
