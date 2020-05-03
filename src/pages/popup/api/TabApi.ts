@@ -4,6 +4,7 @@ import { Random } from 'mockjs'
 import { windowApi } from './WindowApi'
 import TabActiveInfo = chrome.tabs.TabActiveInfo
 import Tab = chrome.tabs.Tab
+import { BrowserApiUtil, Env } from './BrowserApiUtil'
 
 export interface BaseTabApi {
   /**
@@ -110,12 +111,13 @@ class WebTabApi implements BaseTabApi {
 
   onChange(listener: EmptyFunc): EmptyFunc {
     console.log('开始监听 tab 页变化')
-    const interval = setInterval(() => listener)
     return () => {
       console.log('结束监听 tab 页变化')
-      clearInterval(interval)
     }
   }
 }
 
-export const tabApi: BaseTabApi = new ChromeTabApi()
+export const tabApi: BaseTabApi = BrowserApiUtil.get({
+  [Env.Web]: WebTabApi,
+  [Env.Chrome]: ChromeTabApi,
+})

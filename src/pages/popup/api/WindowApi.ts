@@ -1,4 +1,6 @@
 import { WindowModel } from '../model/WindowModel'
+import { Random } from 'mockjs'
+import { BrowserApiUtil, Env } from './BrowserApiUtil'
 
 interface BaseWindowApi {
   active(windowId: number): Promise<WindowModel>
@@ -22,4 +24,21 @@ class ChromeWindowApi implements BaseWindowApi {
   }
 }
 
-export const windowApi: BaseWindowApi = new ChromeWindowApi()
+class WebWindowApi implements BaseWindowApi {
+  async active(windowId: number): Promise<WindowModel> {
+    return {
+      id: windowId,
+    }
+  }
+
+  async current(): Promise<WindowModel> {
+    return {
+      id: Random.increment(),
+    }
+  }
+}
+
+export const windowApi: BaseWindowApi = BrowserApiUtil.get({
+  [Env.Web]: WebWindowApi,
+  [Env.Chrome]: ChromeWindowApi,
+})

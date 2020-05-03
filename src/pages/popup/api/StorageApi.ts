@@ -1,3 +1,5 @@
+import { BrowserApiUtil, Env } from './BrowserApiUtil'
+
 export type TabOrderMap = Record<number, number>
 
 interface BaseStorageApi {
@@ -25,7 +27,17 @@ class ChromeStorageApi implements BaseStorageApi {
     )
   }
 }
-class FireFoxStorageApi {}
-class WebStorageApi {}
+class WebStorageApi implements ChromeStorageApi {
+  async get<T>(k: string): Promise<T> {
+    return new Map<number, number>() as any
+  }
 
-export const storageApi: BaseStorageApi = new ChromeStorageApi()
+  async set(k: string, v: any): Promise<void> {
+    console.log('设置缓存')
+  }
+}
+
+export const storageApi: BaseStorageApi = BrowserApiUtil.get({
+  [Env.Web]: WebStorageApi,
+  [Env.Chrome]: ChromeStorageApi,
+})
