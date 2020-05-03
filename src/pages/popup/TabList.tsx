@@ -6,7 +6,6 @@ import { useKey } from '../../common/hooks/useKey'
 import { isCharOrNumber } from '../../common/util/isCharOrNumber'
 import { tabApi } from './api/TabApi'
 import css from './TabList.module.css'
-import { windowApi } from './api/WindowApi'
 
 type PropsType = {
   list: TabModel[]
@@ -24,6 +23,7 @@ const TabList: React.FC<PropsType> = (props) => {
       ),
     [keyword, selectIndex, props.list],
   )
+
   const keywordInputRef = useRef<HTMLInputElement>(null)
   const [isFocus, setIsFocus] = useState(true)
   useKey(
@@ -72,10 +72,7 @@ const TabList: React.FC<PropsType> = (props) => {
           }}
           autoFocus={true}
           onFocus={() => setIsFocus(true)}
-          onBlur={() => {
-            console.log('失去焦点')
-            setIsFocus(false)
-          }}
+          onBlur={() => setIsFocus(false)}
         />
       </header>
       <ul className={css.list}>
@@ -83,6 +80,7 @@ const TabList: React.FC<PropsType> = (props) => {
           <li key={i}>
             <TabItem
               item={tab}
+              keyword={keyword}
               selected={selectIndex === i}
               onMouseOver={() => setSelectIndex(i)}
             />

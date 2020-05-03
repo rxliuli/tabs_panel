@@ -14,16 +14,16 @@ const Popup: React.FC = () => {
   const [tabs, setTabs] = useState<TabModel[]>([])
   useEffect(() => {
     return tabApi.onChange(async () => {
-      return setTabs(await tabApi.all())
+      setTabs(await tabApi.all())
     })
   })
-  useDidMount(() => {
-    ;(async () => {
-      const tabOrderMap: TabOrderMap = await storageApi.get(
-        Config.IdOrderMapName,
-      )
-      setTabs(sortBy(await tabApi.all(), (tab) => -tabOrderMap[tab.id] || 0))
-    })()
+  useDidMount(async () => {
+    const tabOrderMap: TabOrderMap = await storageApi.get(Config.IdOrderMapName)
+    const list = sortBy(
+      await tabApi.all(),
+      (tab) => -(tabOrderMap[tab.id] || 0),
+    )
+    setTabs(list)
   })
 
   return <TabList list={tabs} />

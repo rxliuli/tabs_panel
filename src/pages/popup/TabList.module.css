@@ -1,10 +1,7 @@
 .root {
   width: 600px;
-}
-.root,
-.root * {
   background-color: #263238;
-  color: #ffffff;
+  color: rgb(221, 221, 221);
 }
 /* 顶部搜索内容标题 */
 .header {

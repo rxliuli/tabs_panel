@@ -13,6 +13,7 @@
   display: inline-block;
   border-radius: 50%;
   margin-right: 16px;
+  height: 40px;
 }
 .content {
   max-width: calc(100% - 56px - 16px);
