@@ -1,10 +1,12 @@
+import { WindowModel } from '../model/WindowModel'
+
 interface BaseWindowApi {
-  active(windowId: number): Promise<chrome.windows.Window>
-  current(): Promise<chrome.windows.Window>
+  active(windowId: number): Promise<WindowModel>
+  current(): Promise<WindowModel>
 }
 
 class ChromeWindowApi implements BaseWindowApi {
-  active(windowId: number): Promise<chrome.windows.Window> {
+  active(windowId: number): Promise<WindowModel> {
     return new Promise((resolve) =>
       chrome.windows.update(
         windowId,
@@ -15,7 +17,7 @@ class ChromeWindowApi implements BaseWindowApi {
       ),
     )
   }
-  current(): Promise<chrome.windows.Window> {
+  current(): Promise<WindowModel> {
     return new Promise((resolve) => chrome.windows.getCurrent(resolve))
   }
 }
