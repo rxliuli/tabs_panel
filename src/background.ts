@@ -6,22 +6,13 @@ import { autoIncrement } from './common/util/autoIncrement'
 /**
  * 处理命令
  */
-chrome.commands.onCommand.addListener(function (command) {
-  console.log('command: ', command)
-  if (command === 'showPopupPanel') {
-    chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
-      chrome.browserAction.getPopup(
-        {
-          tabId: tabs[0].id,
-        },
-        (result) => {
-          console.log(result)
-        },
-      )
-    })
-  }
+chrome.commands.onCommand.addListener(async (command) => {
+  console.log('onCommand: ', command)
 })
 
+/**
+ * 记录活跃窗口打开的顺序
+ */
 chrome.tabs.onActivated.addListener(async (tab: TabActiveInfo) => {
   const val = await storageApi.get<TabOrderMap>(Config.IdOrderMapName)
   const cache: TabOrderMap = val ? val : {}

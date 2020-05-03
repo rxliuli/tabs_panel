@@ -9,12 +9,13 @@
     "persistent": false
   },
   "commands": {
-    "showPopupPanel": {
+    "_execute_browser_action": {
       "suggested_key": {
-        "default": "Ctrl+Shift+E",
-        "mac": "Command+Shift+E"
-      },
-      "description": "显示扩展面板"
+        "windows": "Ctrl+E",
+        "mac": "Command+E",
+        "chromeos": "Ctrl+E",
+        "linux": "Ctrl+E"
+      }
     }
   },
   "homepage_url": "http://rxliuli.com/",
