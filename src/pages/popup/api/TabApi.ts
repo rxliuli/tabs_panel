@@ -1,8 +1,9 @@
 import { TabModel } from '../model/TabModel'
 import { EmptyFunc } from '../../../common/types/EmptyFunc'
 import { Random } from 'mockjs'
-import TabActiveInfo = chrome.tabs.TabActiveInfo
 import { windowApi } from './WindowApi'
+import TabActiveInfo = chrome.tabs.TabActiveInfo
+import Tab = chrome.tabs.Tab
 
 export interface BaseTabApi {
   /**
@@ -37,7 +38,10 @@ class ChromeTabApi implements BaseTabApi {
   }
 
   async activeByWindow(info: chrome.tabs.TabActiveInfo): Promise<void> {
-    await windowApi.active(info.windowId)
+    const activeWindowId = (await windowApi.current()).id
+    if (activeWindowId !== info.windowId) {
+      await windowApi.active(info.windowId)
+    }
     await this.active(info.tabId)
   }
 
@@ -47,7 +51,7 @@ class ChromeTabApi implements BaseTabApi {
     })
   }
   private queryTabByWindowId(windowId: number) {
-    return new Promise((resolve) =>
+    return new Promise<TabModel[]>((resolve) =>
       chrome.tabs.query({ windowId }, (tabs) => {
         resolve(
           tabs
