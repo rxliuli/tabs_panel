@@ -53,7 +53,7 @@ class ChromeTabApi implements BaseTabApi {
   }
   private queryTabByWindowId(windowId: number) {
     return new Promise<TabModel[]>((resolve) =>
-      chrome.tabs.query({ windowId }, (tabs) => {
+      chrome.tabs.query({ windowId, windowType: 'normal' }, (tabs) => {
         resolve(
           tabs
             //过滤掉没有标题的和插件本身

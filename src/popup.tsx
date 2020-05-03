@@ -18,6 +18,7 @@ const Popup: React.FC = () => {
     })
   })
   useDidMount(async () => {
+    Reflect.set(window, 'tabApi', tabApi)
     const tabOrderMap: TabOrderMap = await storageApi.get(Config.IdOrderMapName)
     const list = sortBy(
       await tabApi.all(),

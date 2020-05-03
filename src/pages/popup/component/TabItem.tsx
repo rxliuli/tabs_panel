@@ -5,6 +5,7 @@ import { tabApi } from '../api/TabApi'
 import css from './TabItem.module.css'
 import classNames from 'classnames'
 import { TabItemKeywordHigh } from './TabItemKeywordHigh'
+import defaultFavIconUrl from '../../../assets/icon/icon-default-fav-icon-url.svg'
 
 type PropsType = {
   item: TabModel
@@ -28,9 +29,11 @@ const TabItem: React.FC<PropsType> = (props) => {
       }
       onMouseOver={props.onMouseOver}
     >
-      <section>
-        <img className={css.icon} src={favIconUrl} alt="icon" />
-      </section>
+      <img
+        className={css.icon}
+        src={favIconUrl || defaultFavIconUrl}
+        alt="icon"
+      />
       <section className={css.content}>
         <h4 className={classNames(css.ellipsis, css.title)}>
           <TabItemKeywordHigh title={title} keyword={props.keyword} />

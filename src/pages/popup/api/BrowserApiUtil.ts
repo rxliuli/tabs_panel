@@ -4,7 +4,7 @@ export enum Env {
 }
 
 export class BrowserApiUtil {
-  private static env = Env.Web
+  private static env = Env.Chrome
   static get<R>(map: Record<Env, any>): R {
     switch (this.env) {
       case Env.Web:

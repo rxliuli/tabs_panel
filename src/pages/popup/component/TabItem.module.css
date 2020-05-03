@@ -1,33 +1,39 @@
 .root {
   display: flex;
+  align-items: center;
   padding: 8px;
 }
 /*当前选择项*/
-.root.active,
-.root.active * {
+.root.active {
   background-color: #607d8b;
   cursor: pointer;
 }
 
 .icon {
+  box-sizing: border-box;
+  height: 48px;
   display: inline-block;
+  background-color: #ffffff;
+  border: solid 4px #ffffff;
   border-radius: 50%;
   margin-right: 16px;
-  height: 40px;
 }
 .content {
   max-width: calc(100% - 56px - 16px);
 }
+
 .ellipsis {
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
+/*标题*/
 .title {
   margin: 0;
+  font-size: 16px;
 }
+/*url*/
 .url {
   margin: 4px 0 0;
 }
