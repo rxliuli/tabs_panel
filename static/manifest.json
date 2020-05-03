@@ -21,5 +21,11 @@
   "browser_action": {
     "default_popup": "popup.html"
   },
+  "icons": {
+    "16": "image/icon/icon-popup-16.png",
+    "32": "image/icon/icon-popup-32.png",
+    "48": "image/icon/icon-popup-48.png",
+    "128": "image/icon/icon-popup-128.png"
+  },
   "manifest_version": 2
 }
