@@ -14,6 +14,8 @@ import {
   globalConfigApi,
   initGlobalConfig,
 } from './pages/popup/api/GlobalConfigApi'
+import { i18nApi } from './pages/popup/api/I18nApi'
+import { localUtil } from './common/i18n/LocalUtil'
 
 const Popup: React.FC = () => {
   const [tabs, setTabs] = useState<TabModel[]>([])
@@ -32,11 +34,15 @@ const Popup: React.FC = () => {
     setTabs(list)
   })
 
+  //region 初始化配置项
+
   const [config, setConfig] = useState(initGlobalConfig)
   useDidMount(async () => {
     setConfig(await globalConfigApi.getConfig())
+    localUtil.language = config.language
   })
 
+  //endregion
   return (
     //使用黑暗主题
     <PopupContext.Provider value={config}>
