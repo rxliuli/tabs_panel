@@ -1,11 +1,14 @@
 import * as React from 'react'
-import { useMemo, useRef, useState } from 'react'
+import { useContext, useMemo, useRef, useState } from 'react'
 import TabItem from './component/TabItem'
 import { TabModel } from './model/TabModel'
 import { useKey } from '../../common/hooks/useKey'
 import { isCharOrNumber } from '../../common/util/isCharOrNumber'
 import { tabApi } from './api/TabApi'
 import css from './TabPanel.module.css'
+import classNames from 'classnames'
+import { PopupContext } from './component/PopupContext'
+import { ThemeEnum } from './api/GlobalConfigApi'
 
 type PropsType = {
   list: TabModel[]
@@ -59,8 +62,14 @@ const TabPanel: React.FC<PropsType> = (props) => {
     { deps: [keyword, selectIndex, filterList, isFocus] },
   )
 
+  const theme = useContext(PopupContext).theme
+
   return (
-    <div className={css.root}>
+    <div
+      className={classNames(css.root, {
+        [css.light]: theme === ThemeEnum.Light,
+      })}
+    >
       <header className={css.header}>
         <input
           className={css.input}

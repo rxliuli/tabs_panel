@@ -1,3 +1,6 @@
 .keyword {
   color: #bb86fc;
 }
+.keyword.light {
+  color: #0091ea;
+}

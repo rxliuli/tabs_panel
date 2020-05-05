@@ -1,11 +1,13 @@
 import * as React from 'react'
-import { MouseEventHandler } from 'react'
+import { MouseEventHandler, useContext } from 'react'
 import { TabModel } from '../model/TabModel'
 import { tabApi } from '../api/TabApi'
 import css from './TabItem.module.css'
 import classNames from 'classnames'
 import { TabItemKeywordHigh } from './TabItemKeywordHigh'
 import defaultFavIconUrl from '../../../assets/icon/icon-default-fav-icon-url.svg'
+import { PopupContext } from './PopupContext'
+import { ThemeEnum } from '../api/GlobalConfigApi'
 
 type PropsType = {
   item: TabModel
@@ -16,10 +18,12 @@ type PropsType = {
 
 const TabItem: React.FC<PropsType> = (props) => {
   const { id, title, url, favIconUrl, windowId } = props.item
+  const theme = useContext(PopupContext).theme
   return (
     <div
       className={classNames(css.root, {
         [css.active]: props.selected,
+        [css.light]: theme === ThemeEnum.Light,
       })}
       onClick={() =>
         tabApi.activeByWindow({
