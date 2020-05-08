@@ -14,18 +14,18 @@ import {
   globalConfigApi,
   initGlobalConfig,
 } from './pages/popup/api/GlobalConfigApi'
-import { i18nApi } from './pages/popup/api/I18nApi'
 import { localUtil } from './common/i18n/LocalUtil'
 
 const Popup: React.FC = () => {
   const [tabs, setTabs] = useState<TabModel[]>([])
   useEffect(() => {
     return tabApi.onChange(async () => {
-      setTabs(await tabApi.all())
+      const tabs = await tabApi.all()
+      console.log('Popup tabApi.onChange: ', tabs)
+      setTabs(tabs)
     })
   })
   useDidMount(async () => {
-    Reflect.set(window, 'tabApi', tabApi)
     const tabOrderMap: TabOrderMap = await storageApi.get(Config.IdOrderMapName)
     const list = sortBy(
       await tabApi.all(),

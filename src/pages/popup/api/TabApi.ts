@@ -25,6 +25,37 @@ export interface BaseTabApi {
   onChange(listener: EmptyFunc): EmptyFunc
 }
 
+class WebTabApi implements BaseTabApi {
+  private static mockTabModel(): TabModel {
+    return {
+      id: Random.increment(),
+      windowId: Random.increment(),
+      title: Random.ctitle(10, 100),
+      url: Random.url(),
+      favIconUrl: Random.boolean() ? Random.image('40px') : '',
+    }
+  }
+
+  async activeByWindow(info: chrome.tabs.TabActiveInfo): Promise<void> {
+    console.log('激活窗口和 tabId 了')
+  }
+
+  async active(id: number): Promise<TabModel> {
+    console.log('切换到指定页面')
+    return WebTabApi.mockTabModel()
+  }
+  async all(): Promise<TabModel[]> {
+    return Array(30).fill(0).map(WebTabApi.mockTabModel)
+  }
+
+  onChange(listener: EmptyFunc): EmptyFunc {
+    console.log('开始监听 tab 页变化')
+    return () => {
+      console.log('结束监听 tab 页变化')
+    }
+  }
+}
+
 class ChromeTabApi implements BaseTabApi {
   active(id: number): Promise<TabModel> {
     return new Promise((resolve) =>
@@ -86,33 +117,66 @@ class ChromeTabApi implements BaseTabApi {
   }
 }
 
-class WebTabApi implements BaseTabApi {
-  private static mockTabModel(): TabModel {
-    return {
-      id: Random.increment(),
-      windowId: Random.increment(),
-      title: Random.ctitle(10, 100),
-      url: Random.url(),
-      favIconUrl: Random.image('40px'),
-    }
+class FirefoxTabApi implements BaseTabApi {
+  async active(id: number): Promise<TabModel> {
+    const tab = await browser.tabs.update(id, {
+      active: true,
+    })
+    return tab as Required<Tab>
   }
 
   async activeByWindow(info: chrome.tabs.TabActiveInfo): Promise<void> {
-    console.log('激活窗口和 tabId 了')
+    const activeWindowId = (await windowApi.current()).id
+    if (activeWindowId !== info.windowId) {
+      await windowApi.active(info.windowId)
+    }
+    await this.active(info.tabId)
   }
-
-  async active(id: number): Promise<TabModel> {
-    console.log('切换到指定页面')
-    return WebTabApi.mockTabModel()
+  private queryWindow() {
+    return browser.windows.getAll()
+  }
+  private async queryTabByWindowId(windowId: number) {
+    const tabs = await browser.tabs.query({
+      windowId,
+      windowType: 'normal',
+    })
+    return (
+      tabs
+        //过滤掉没有标题的和插件本身
+        .filter((tab) => tab.title)
+        .map(
+          (tab) =>
+            ({
+              ...tab,
+              favIconUrl:
+                tab.favIconUrl ===
+                'chrome://mozapps/skin/extensions/extension.svg'
+                  ? null
+                  : tab.favIconUrl,
+            } as TabModel),
+        )
+    )
   }
   async all(): Promise<TabModel[]> {
-    return Array(30).fill(0).map(WebTabApi.mockTabModel)
+    return (
+      await Promise.all(
+        (await this.queryWindow()).map((window) =>
+          this.queryTabByWindowId(window.id!),
+        ),
+      )
+    ).flat()
   }
 
   onChange(listener: EmptyFunc): EmptyFunc {
-    console.log('开始监听 tab 页变化')
+    browser.tabs.onCreated.addListener(listener)
+    browser.tabs.onRemoved.addListener(listener)
+    browser.tabs.onUpdated.addListener(listener)
+    browser.tabs.onReplaced.addListener(listener)
     return () => {
-      console.log('结束监听 tab 页变化')
+      browser.tabs.onCreated.removeListener(listener)
+      browser.tabs.onRemoved.removeListener(listener)
+      browser.tabs.onUpdated.removeListener(listener)
+      browser.tabs.onReplaced.removeListener(listener)
     }
   }
 }
@@ -120,4 +184,5 @@ class WebTabApi implements BaseTabApi {
 export const tabApi: BaseTabApi = BrowserApiUtil.get({
   [Env.Web]: WebTabApi,
   [Env.Chrome]: ChromeTabApi,
+  [Env.Firefox]: FirefoxTabApi,
 })

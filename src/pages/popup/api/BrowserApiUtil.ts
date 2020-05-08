@@ -1,16 +1,12 @@
 export enum Env {
   Web = 'web',
   Chrome = 'chrome',
+  Firefox = 'firefox',
 }
 
 export class BrowserApiUtil {
-  private static env = Env.Chrome
+  private static env = Env.Firefox
   static get<R>(map: Record<Env, any>): R {
-    switch (this.env) {
-      case Env.Web:
-        return new map[this.env]()
-      case Env.Chrome:
-        return new map[this.env]()
-    }
+    return new map[this.env]()
   }
 }

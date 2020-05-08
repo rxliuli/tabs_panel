@@ -18,9 +18,9 @@ chrome.tabs.onActivated.addListener(async (tab: TabActiveInfo) => {
   const cache: TabOrderMap = val ? val : {}
   cache[tab.tabId] = autoIncrement()
   await storageApi.set(Config.IdOrderMapName, cache)
-  console.log(
-    'onActivated tab: ',
-    tab,
-    await storageApi.get(Config.IdOrderMapName),
-  )
+  // console.log(
+  //   'onActivated tab: ',
+  //   tab,
+  //   await storageApi.get(Config.IdOrderMapName),
+  // )
 })

@@ -41,7 +41,17 @@ class ChromeGlobalConfigApi implements BaseGlobalConfigApi {
   }
 }
 
+class FirefoxGlobalConfigApi implements BaseGlobalConfigApi {
+  async getConfig() {
+    return {
+      ...initGlobalConfig,
+      ...(await storageApi.get<GlobalConfig>(Config.GlobalConfig)),
+    }
+  }
+}
+
 export const globalConfigApi: BaseGlobalConfigApi = BrowserApiUtil.get({
   [Env.Web]: WebGlobalConfigApi,
   [Env.Chrome]: ChromeGlobalConfigApi,
+  [Env.Firefox]: FirefoxGlobalConfigApi,
 })

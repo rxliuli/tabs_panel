@@ -9,7 +9,7 @@ import css from './TabPanel.module.css'
 import classNames from 'classnames'
 import { PopupContext } from './component/PopupContext'
 import { ThemeEnum } from './api/GlobalConfigApi'
-import { LanguageEnum, localUtil } from '../../common/i18n/LocalUtil'
+import { localUtil } from '../../common/i18n/LocalUtil'
 
 type PropsType = {
   list: TabModel[]

@@ -5,7 +5,7 @@ import { tabApi } from '../api/TabApi'
 import css from './TabItem.module.css'
 import classNames from 'classnames'
 import { TabItemKeywordHigh } from './TabItemKeywordHigh'
-import defaultFavIconUrl from '../../../assets/icon/icon-default-fav-icon-url.svg'
+import defaultFavIconUrl from '../../../assets/icon/icon-default-fav-icon-url.png'
 import { PopupContext } from './PopupContext'
 import { ThemeEnum } from '../api/GlobalConfigApi'
 
