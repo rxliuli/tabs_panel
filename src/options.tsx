@@ -1,8 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+import 'antd/dist/antd.css'
+import OptionHome from './pages/options/OptionHome'
 
-const Options: React.FC = () => {
-  return <div>Options</div>
-}
-
-ReactDOM.render(<Options />, document.getElementById('app'))
+ReactDOM.render(<OptionHome />, document.getElementById('app'))
