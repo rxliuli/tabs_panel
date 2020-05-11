@@ -5,7 +5,7 @@ export enum Env {
 }
 
 export class BrowserApiUtil {
-  private static env = Env.Firefox
+  private static env = Env.Web
   static get<R>(map: Record<Env, any>): R {
     return new map[this.env]()
   }

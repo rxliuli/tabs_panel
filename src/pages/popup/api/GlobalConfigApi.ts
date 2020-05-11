@@ -24,11 +24,16 @@ export const initGlobalConfig: GlobalConfig = {
 
 interface BaseGlobalConfigApi {
   getConfig(): Promise<GlobalConfig>
+  setConfig(config: Partial<GlobalConfig>): Promise<void>
 }
 
 class WebGlobalConfigApi implements BaseGlobalConfigApi {
   async getConfig() {
     return initGlobalConfig
+  }
+
+  async setConfig(config: GlobalConfig) {
+    Object.assign(initGlobalConfig, config)
   }
 }
 
@@ -39,6 +44,19 @@ class ChromeGlobalConfigApi implements BaseGlobalConfigApi {
       ...(await storageApi.get<GlobalConfig>(Config.GlobalConfig)),
     }
   }
+
+  async setConfig(config: GlobalConfig) {
+    return new Promise<void>(async (resolve) =>
+      chrome.storage.local.set(
+        {
+          ...initGlobalConfig,
+          ...(await this.getConfig()),
+          ...config,
+        },
+        resolve,
+      ),
+    )
+  }
 }
 
 class FirefoxGlobalConfigApi implements BaseGlobalConfigApi {
@@ -47,6 +65,14 @@ class FirefoxGlobalConfigApi implements BaseGlobalConfigApi {
       ...initGlobalConfig,
       ...(await storageApi.get<GlobalConfig>(Config.GlobalConfig)),
     }
+  }
+
+  async setConfig(config: GlobalConfig): Promise<void> {
+    return browser.storage.local.set({
+      ...initGlobalConfig,
+      ...(await this.getConfig()),
+      ...config,
+    })
   }
 }
 
