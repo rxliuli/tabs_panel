@@ -2,24 +2,24 @@ import { BrowserApiUtil, Env } from './BrowserApiUtil'
 import { LanguageEnum } from '../../../common/i18n/LocalUtil'
 
 interface BaseI18nApi {
-  language(): string
+  language(): LanguageEnum
 }
 
 class WebI18nApi implements BaseI18nApi {
-  language(): string {
+  language(): LanguageEnum {
     return LanguageEnum.zhCN
   }
 }
 
 class ChromeI18nApi implements BaseI18nApi {
-  language(): string {
-    return chrome.i18n.getUILanguage()
+  language(): LanguageEnum {
+    return chrome.i18n.getUILanguage() as any
   }
 }
 
 class FirefoxI18nApi implements BaseI18nApi {
-  language(): string {
-    return browser.i18n.getUILanguage()
+  language(): LanguageEnum {
+    return browser.i18n.getUILanguage() as any
   }
 }
 

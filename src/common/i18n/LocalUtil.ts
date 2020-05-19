@@ -4,8 +4,8 @@ import { LocalDefine } from './LocalDefine'
 import { get } from '../util/get'
 
 export enum LanguageEnum {
-  enUS = 'enUS',
-  zhCN = 'zhCN',
+  enUS = 'en',
+  zhCN = 'zh-CN',
 }
 
 export class LocalUtil {
@@ -17,6 +17,7 @@ export class LocalUtil {
   private localInfo!: LocalDefine
 
   set language(language: LanguageEnum) {
+    console.log('set language', language)
     this._language = language
     this.localInfo = LocalUtil.map[this._language]
   }
@@ -24,6 +25,7 @@ export class LocalUtil {
     this.language = LanguageEnum.enUS
   }
   get(key: string): string {
+    console.log('localUtil: ', this._language, key, this.localInfo)
     return get<string>(this.localInfo, key)!
   }
 }

@@ -3,10 +3,11 @@ import { Button, Form, Select } from 'antd'
 import {
   GlobalConfig,
   globalConfigApi,
+  initGlobalConfig,
   ThemeEnum,
 } from '../popup/api/GlobalConfigApi'
 import { LanguageEnum } from '../../common/i18n/LocalUtil'
-import { useReducer } from 'react'
+import { useDidMount } from '../../common/hooks/useDidMount'
 
 const { Option } = Select
 
@@ -17,31 +18,41 @@ type PropsType = {}
  * @constructor
  */
 const OptionHome: React.FC<PropsType> = (props) => {
+  const [form] = Form.useForm()
+  useDidMount(async () => {
+    const config = await globalConfigApi.getConfig()
+    form.setFieldsValue({
+      ...initGlobalConfig,
+      ...config,
+    })
+    console.log('OptionHome config: ', config)
+  })
+
   async function handleSubmit(config: object) {
-    await globalConfigApi.setConfig(config)
     console.log('handleSubmit', config)
+    await globalConfigApi.setConfig(config)
   }
 
   return (
-    <Form
-      initialValues={
-        {
-          theme: ThemeEnum.Dark,
-          language: LanguageEnum.zhCN,
-        } as GlobalConfig
-      }
-      onFinish={handleSubmit}
-    >
+    <Form form={form} initialValues={initGlobalConfig} onFinish={handleSubmit}>
       <h2>OptionHome</h2>
       {/*主题*/}
-      <Form.Item label={'主题'} rules={[{ required: true }]}>
+      <Form.Item
+        name={'theme' as keyof GlobalConfig}
+        label={'主题'}
+        rules={[{ required: true }]}
+      >
         <Select style={{ width: 300 }}>
           <Option value={ThemeEnum.Dark}>暗色</Option>
           <Option value={ThemeEnum.Light}>亮色</Option>
         </Select>
       </Form.Item>
       {/*语言*/}
-      <Form.Item label={'语言'} rules={[{ required: true }]}>
+      <Form.Item
+        name={'language' as keyof GlobalConfig}
+        label={'语言'}
+        rules={[{ required: true }]}
+      >
         <Select style={{ width: 300 }}>
           <Option value={LanguageEnum.zhCN}>简体中文</Option>
           <Option value={LanguageEnum.enUS}>English</Option>

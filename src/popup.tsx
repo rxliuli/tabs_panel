@@ -38,7 +38,9 @@ const Popup: React.FC = () => {
 
   const [config, setConfig] = useState(initGlobalConfig)
   useDidMount(async () => {
-    setConfig(await globalConfigApi.getConfig())
+    const config = await globalConfigApi.getConfig()
+    setConfig(config)
+    console.log('Popup config: ', config.language)
     localUtil.language = config.language
   })
 

@@ -65,6 +65,11 @@ const TabPanel: React.FC<PropsType> = (props) => {
 
   const theme = useContext(PopupContext).theme
 
+  const placeholder = useMemo(
+    () => localUtil.get('popup.search.placeholder'),
+    [],
+  )
+
   return (
     <div
       className={classNames(css.root, {
@@ -72,20 +77,25 @@ const TabPanel: React.FC<PropsType> = (props) => {
       })}
     >
       <header className={css.header}>
-        <input
-          className={css.input}
-          ref={keywordInputRef}
-          placeholder={localUtil.get('popup.search.placeholder')}
-          type="text"
-          value={keyword}
-          onChange={(e) => {
-            setSelectIndex(0)
-            setKeyword(e.target.value)
-          }}
-          autoFocus={true}
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
-        />
+        {useMemo(
+          () => (
+            <input
+              className={css.input}
+              ref={keywordInputRef}
+              placeholder={placeholder}
+              type="text"
+              value={keyword}
+              onChange={(e) => {
+                setSelectIndex(0)
+                setKeyword(e.target.value)
+              }}
+              autoFocus={true}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+            />
+          ),
+          [keyword],
+        )}
       </header>
       <ul className={css.list}>
         {filterList.map((tab, i) => (

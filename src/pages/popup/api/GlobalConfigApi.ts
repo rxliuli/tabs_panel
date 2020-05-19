@@ -19,7 +19,7 @@ export type GlobalConfig = {
 
 export const initGlobalConfig: GlobalConfig = {
   theme: ThemeEnum.Dark,
-  language: i18nApi.language() as any,
+  language: i18nApi.language(),
 }
 
 interface BaseGlobalConfigApi {
@@ -46,12 +46,19 @@ class ChromeGlobalConfigApi implements BaseGlobalConfigApi {
   }
 
   async setConfig(config: GlobalConfig) {
+    console.log('setConfig: ', {
+      ...initGlobalConfig,
+      ...(await this.getConfig()),
+      ...config,
+    })
     return new Promise<void>(async (resolve) =>
       chrome.storage.local.set(
         {
-          ...initGlobalConfig,
-          ...(await this.getConfig()),
-          ...config,
+          [Config.GlobalConfig]: {
+            ...initGlobalConfig,
+            ...(await this.getConfig()),
+            ...config,
+          },
         },
         resolve,
       ),
