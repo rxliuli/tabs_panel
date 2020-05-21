@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { Reducer, useCallback, useEffect, useReducer, useState } from 'react'
 import * as ReactDOM from 'react-dom'
 import TabPanel from './pages/popup/TabPanel'
 import { TabModel } from './pages/popup/model/TabModel'
@@ -18,30 +18,38 @@ import { localUtil } from './common/i18n/LocalUtil'
 
 const Popup: React.FC = () => {
   const [tabs, setTabs] = useState<TabModel[]>([])
-  useEffect(() => {
-    return tabApi.onChange(async () => {
-      const tabs = await tabApi.all()
-      console.log('Popup tabApi.onChange: ', tabs)
-      setTabs(tabs)
-    })
-  })
-  useDidMount(async () => {
-    const tabOrderMap: TabOrderMap = await storageApi.get(Config.IdOrderMapName)
-    const list = sortBy(
-      await tabApi.all(),
-      (tab) => -(tabOrderMap[tab.id] || 0),
+
+  const load = useCallback(async () => {
+    const map = await storageApi.get<TabOrderMap>(Config.IdOrderMapName)
+    const list = sortBy(await tabApi.all(), (tab) => -(map[tab.id] || 0))
+    console.log('loading tabs: ', map, list)
+    if (
+      JSON.stringify(list.map((item) => item.id)) ===
+      JSON.stringify(tabs.map((item) => item.id))
+    ) {
+      return
+    }
+    console.log(
+      'real loading tabs: ',
+      map,
+      list.map((item) => item.id),
+      tabs.map((item) => item.id),
     )
     setTabs(list)
-  })
+  }, [tabs])
+
+  useDidMount(load)
+  useEffect(() => {
+    return tabApi.onChange(load)
+  }, [load])
 
   //region 初始化配置项
 
   const [config, setConfig] = useState(initGlobalConfig)
   useDidMount(async () => {
     const config = await globalConfigApi.getConfig()
-    setConfig(config)
-    console.log('Popup config: ', config.language)
     localUtil.language = config.language
+    setConfig(config)
   })
 
   //endregion

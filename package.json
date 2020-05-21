@@ -24,13 +24,17 @@
     "@types/react-dom": "^16.9.7",
     "@types/react-router": "^5.1.7",
     "@types/react-router-dom": "^5.1.5",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
     "cross-env": "^7.0.2",
     "eslint": "^7.0.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-react-hooks": "^4.0.2",
     "mockjs": "^1.1.0",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.3.1",
     "postcss-modules": "^2.0.0",
+    "prettier": "^2.0.5",
     "typescript": "^3.8.3"
   },
   "dependencies": {
@@ -43,13 +47,25 @@
     "react-router-dom": "^5.1.2"
   },
   "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "jsx": true,
+      "useJSXTextNode": true
+    },
+    "extends": [
+      "plugin:@typescript-eslint/recommended",
+      "prettier",
+      "prettier/@typescript-eslint",
+      "plugin:react-hooks/recommended"
+    ],
     "plugins": [
+      "@typescript-eslint",
       "react-hooks"
     ],
     "rules": {
+      "@typescript-eslint/no-unused-vars": "off",
       "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
-      "@typescript-eslint/no-unused-vars": "off"
+      "react-hooks/exhaustive-deps": "warn"
     }
   }
 }

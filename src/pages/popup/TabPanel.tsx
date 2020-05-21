@@ -63,12 +63,12 @@ const TabPanel: React.FC<PropsType> = (props) => {
     { deps: [keyword, selectIndex, filterList, isFocus] },
   )
 
-  const theme = useContext(PopupContext).theme
+  const { theme, language } = useContext(PopupContext)
 
-  const placeholder = useMemo(
-    () => localUtil.get('popup.search.placeholder'),
-    [],
-  )
+  const placeholder = useMemo(() => {
+    localUtil.language = language
+    return localUtil.get('popup.search.placeholder')
+  }, [language])
 
   return (
     <div
