@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useContext, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import TabItem from './component/TabItem'
 import { TabModel } from './model/TabModel'
 import { useKey } from '../../common/hooks/useKey'

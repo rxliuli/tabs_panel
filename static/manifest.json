@@ -1,6 +1,6 @@
 {
   "name": "tabs_panel",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "一个标签页快速查找器",
   "permissions": ["tabs", "activeTab", "storage"],
   "options_page": "options.html",

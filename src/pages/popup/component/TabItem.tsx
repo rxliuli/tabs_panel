@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { MouseEventHandler, useContext } from 'react'
+import { MouseEventHandler, useContext, useEffect, useRef } from 'react'
 import { TabModel } from '../model/TabModel'
 import { tabApi } from '../api/TabApi'
 import css from './TabItem.module.css'
