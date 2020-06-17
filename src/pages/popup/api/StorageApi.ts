@@ -1,6 +1,6 @@
-import { BrowserApiUtil, Env } from './BrowserApiUtil'
+import { safeExec } from '../../../common/util/safeExec'
 
-export type TabOrderMap = Record<number, number>
+export type TabOrderRecord = Record<number, number>
 
 interface BaseStorageApi {
   /**
@@ -11,11 +11,11 @@ interface BaseStorageApi {
 }
 class WebStorageApi implements ChromeStorageApi {
   async get<T>(k: string): Promise<T> {
-    return new Map<number, number>() as any
+    return JSON.parse(localStorage.getItem(k)!)
   }
 
   async set(k: string, v: any): Promise<void> {
-    console.log('设置缓存')
+    localStorage.setItem(k, JSON.stringify(v))
   }
 }
 class ChromeStorageApi implements BaseStorageApi {
@@ -48,8 +48,4 @@ class FirefoxStorageApi implements BaseStorageApi {
   }
 }
 
-export const storageApi: BaseStorageApi = BrowserApiUtil.get({
-  [Env.Web]: WebStorageApi,
-  [Env.Chrome]: ChromeStorageApi,
-  [Env.Firefox]: FirefoxStorageApi,
-})
+export const storageApi: BaseStorageApi = new WebStorageApi()

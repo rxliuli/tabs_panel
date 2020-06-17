@@ -9,8 +9,9 @@ module.exports = {
   singleQuote: true,
   // 尽量在所有地方都添加尾逗号
   trailingComma: 'all',
+  arrowParens: 'always',
   // 换行符
-  endOfLine: 'lf',
+  endOfLine: 'crlf',
   overrides: [
     {
       files: ['*.md', '*.json', '*.yml', '*.yaml'],

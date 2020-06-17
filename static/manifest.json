@@ -2,11 +2,10 @@
   "name": "tabs_panel",
   "version": "1.0.1",
   "description": "一个标签页快速查找器",
-  "permissions": ["tabs", "activeTab", "storage"],
+  "permissions": ["tabs", "activeTab"],
   "options_page": "options.html",
   "background": {
-    "scripts": ["background.js", "reload.js"],
-    "persistent": false
+    "scripts": ["background.js", "reload.js"]
   },
   "commands": {
     "_execute_browser_action": {

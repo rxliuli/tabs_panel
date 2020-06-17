@@ -7,7 +7,7 @@ import { tabApi } from './pages/popup/api/TabApi'
 import 'normalize.css'
 import { sortBy } from './common/util/sortBy'
 import { useDidMount } from './common/hooks/useDidMount'
-import { storageApi, TabOrderMap } from './pages/popup/api/StorageApi'
+import { storageApi, TabOrderRecord } from './pages/popup/api/StorageApi'
 import { Config } from './pages/background/config/Config'
 import { PopupContext } from './pages/popup/component/PopupContext'
 import {
@@ -20,9 +20,11 @@ const Popup: React.FC = () => {
   const [tabs, setTabs] = useState<TabModel[]>([])
 
   const load = useCallback(async () => {
-    const map = await storageApi.get<TabOrderMap>(Config.IdOrderMapName)
-    const list = sortBy(await tabApi.all(), (tab) => -(map[tab.id] || 0))
-    console.log('loading tabs: ', map, list)
+    const map =
+      (await storageApi.get<TabOrderRecord>(Config.IdOrderMapName)) || {}
+    Reflect.set(window, 'tabApi', tabApi)
+    const list = sortBy(await tabApi.all(), (tab) => -([tab.id] || 0))
+    // console.log('loading tabs: ', map, list)
     if (
       JSON.stringify(list.map((item) => item.id)) ===
       JSON.stringify(tabs.map((item) => item.id))

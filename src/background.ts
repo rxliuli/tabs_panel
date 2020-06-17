@@ -1,7 +1,8 @@
 import TabActiveInfo = chrome.tabs.TabActiveInfo
-import { storageApi, TabOrderMap } from './pages/popup/api/StorageApi'
+import { storageApi, TabOrderRecord } from './pages/popup/api/StorageApi'
 import { Config } from './pages/background/config/Config'
 import { autoIncrement } from './common/util/autoIncrement'
+import { tabApi } from './pages/popup/api/TabApi'
 
 /**
  * 处理命令
@@ -14,14 +15,19 @@ chrome.commands.onCommand.addListener(async (command) => {
  * 记录活跃窗口打开的顺序
  */
 chrome.tabs.onActivated.addListener(async (tab: TabActiveInfo) => {
-  const val = await storageApi.get<TabOrderMap>(Config.IdOrderMapName)
-  const cache: TabOrderMap = val ? val : {}
-  cache[tab.tabId] = await autoIncrement()
+  const cache =
+    (await storageApi.get<TabOrderRecord>(Config.IdOrderMapName)) || {}
+  const id = await autoIncrement()
+  console.log('onActivated tab: ', id, tab, cache)
+  cache[tab.tabId] = id
   await storageApi.set(Config.IdOrderMapName, cache)
-  console.log(localStorage.setItem('test', '测试'))
-  // console.log(
-  //   'onActivated tab: ',
-  //   tab,
-  //   await storageApi.get(Config.IdOrderMapName),
-  // )
 })
+
+chrome.tabs.onRemoved.addListener(async (tabId: number) => {
+  const cache =
+    (await storageApi.get<TabOrderRecord>(Config.IdOrderMapName)) || {}
+  Reflect.deleteProperty(cache, tabId)
+  await storageApi.set(Config.IdOrderMapName, cache)
+})
+
+Reflect.set(window, 'tabApi', tabApi)
