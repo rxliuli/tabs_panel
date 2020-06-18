@@ -10,10 +10,10 @@
   "commands": {
     "_execute_browser_action": {
       "suggested_key": {
-        "windows": "Ctrl+E",
-        "mac": "Command+E",
-        "chromeos": "Ctrl+E",
-        "linux": "Ctrl+E"
+        "windows": "Alt+A",
+        "mac": "Alt+A",
+        "chromeos": "Alt+A",
+        "linux": "Alt+A"
       }
     }
   },
