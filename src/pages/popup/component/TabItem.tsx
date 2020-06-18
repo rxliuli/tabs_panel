@@ -14,6 +14,7 @@ type PropsType = {
   selected: boolean
   onMouseOver: MouseEventHandler<HTMLDivElement>
   keyword: string
+  openTab: () => void
 }
 
 const TabItem: React.FC<PropsType> = (props) => {
@@ -25,12 +26,7 @@ const TabItem: React.FC<PropsType> = (props) => {
         [css.active]: props.selected,
         [css.light]: theme === ThemeEnum.Light,
       })}
-      onClick={() =>
-        tabApi.activeByWindow({
-          tabId: id,
-          windowId,
-        })
-      }
+      onClick={props.openTab}
       onMouseOver={props.onMouseOver}
     >
       <img

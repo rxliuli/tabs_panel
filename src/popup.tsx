@@ -20,11 +20,20 @@ const Popup: React.FC = () => {
   const [tabs, setTabs] = useState<TabModel[]>([])
 
   const load = useCallback(async () => {
-    const map =
+    const tabIdToOrderIdMap =
       (await storageApi.get<TabOrderRecord>(Config.IdOrderMapName)) || {}
-    Reflect.set(window, 'tabApi', tabApi)
-    const list = sortBy(await tabApi.all(), (tab) => -([tab.id] || 0))
-    // console.log('loading tabs: ', map, list)
+    // Reflect.set(window, 'tabApi', tabApi)
+    const list = sortBy(
+      await tabApi.all(),
+      (tab) => -(tabIdToOrderIdMap[tab.id] || 0),
+    )
+    console.log(
+      'loading tabs: ',
+      list.map((item) => ({
+        id: item.id,
+        order: tabIdToOrderIdMap[item.id],
+      })),
+    )
     if (
       JSON.stringify(list.map((item) => item.id)) ===
       JSON.stringify(tabs.map((item) => item.id))
@@ -33,7 +42,7 @@ const Popup: React.FC = () => {
     }
     console.log(
       'real loading tabs: ',
-      map,
+      tabIdToOrderIdMap,
       list.map((item) => item.id),
       tabs.map((item) => item.id),
     )

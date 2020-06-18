@@ -30,6 +30,29 @@ const TabPanel: React.FC<PropsType> = (props) => {
 
   const keywordInputRef = useRef<HTMLInputElement>(null)
   const [isFocus, setIsFocus] = useState(true)
+
+  useEffect(() => {
+    const listener = () => {
+      if (process.env.NODE_ENV === 'production') {
+        window.close()
+      }
+    }
+    window.addEventListener('blur', listener)
+    return () => window.removeEventListener('blur', listener)
+  }, [])
+
+  async function openTab() {
+    const current = filterList[selectIndex]
+    if (!current) {
+      return
+    }
+    await tabApi.activeByWindow({
+      tabId: current.id,
+      windowId: current.windowId,
+    })
+    window.close()
+  }
+
   useKey(
     async (key, e) => {
       // 输入字符
@@ -40,14 +63,7 @@ const TabPanel: React.FC<PropsType> = (props) => {
         }
       }
       if (key === 'Enter') {
-        const current = filterList[selectIndex]
-        if (!current) {
-          return
-        }
-        await tabApi.activeByWindow({
-          tabId: current.id,
-          windowId: current.windowId,
-        })
+        await openTab()
       }
       // 上移
       if (key === 'ArrowUp') {
@@ -105,6 +121,7 @@ const TabPanel: React.FC<PropsType> = (props) => {
               keyword={keyword}
               selected={selectIndex === i}
               onMouseOver={() => setSelectIndex(i)}
+              openTab={openTab}
             />
           </li>
         ))}
