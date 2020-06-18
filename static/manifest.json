@@ -1,6 +1,6 @@
 {
   "name": "tabs_panel",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "一个标签页快速查找器",
   "permissions": ["tabs", "activeTab"],
   "options_page": "options.html",
@@ -17,7 +17,7 @@
       }
     }
   },
-  "homepage_url": "http://rxliuli.com/",
+  "homepage_url": "http://github.com/rxliuli/tabs_panel",
   "browser_action": {
     "default_popup": "popup.html"
   },

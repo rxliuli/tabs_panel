@@ -1,14 +1,14 @@
 {
   "name": "tabs_panel",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "license": "MIT",
   "scripts": {
     "dev:popup": "parcel src/popup.html",
     "dev:options": "parcel src/options.html",
     "dev:chrome": "cross-env ApiEnv=chrome parcel watch src/content.tsx src/options.html src/popup.html src/background.ts --no-hmr --out-dir dist/tabs_panel_chrome",
-    "build:chrome": "cross-env ApiEnv=chrome parcel build src/content.tsx src/options.html src/popup.html src/background.ts --out-dir dist/tabs_panel_chrome",
+    "build:chrome": "cross-env ApiEnv=chrome parcel build src/content.tsx src/options.html src/popup.html src/background.ts --out-dir dist/tabs_panel_chrome --no-source-maps",
     "pack:chrome": "crx pack dist/tabs_panel_chrome -p key.pem  --zip-output dist/tabs_panel.zip",
-    "publish:chrome": "yarn build:chrome && yarn pack:chrome"
+    "publish:chrome": "rimraf dist && yarn build:chrome && yarn pack:chrome"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
